@@ -1,0 +1,8 @@
+kind: Group
+apiVersion: user.openshift.io/v1
+metadata:
+  name: {{ .Values.dso.project}}-group-rw
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+users: {{- range .Values.kibana.users }}
+{{.}}{{- end }}

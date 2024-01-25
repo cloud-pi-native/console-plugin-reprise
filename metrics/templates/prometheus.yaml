@@ -1,0 +1,36 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+  name: datasource-prom-{{ .Values.grafana.instanceName }}
+  namespace: {{ .Values.grafana.namespace }}
+spec:
+  datasource:
+    access: proxy
+    basicAuth: true
+    basicAuthUser: ${PROMETHEUS_USERNAME}
+    isDefault: true
+    jsonData:
+      httpHeaderName1: X-Scope-OrgID
+    name: Prometheus
+    secureJsonData:
+      basicAuthPassword: ${PROMETHEUS_PASSWORD}
+      httpHeaderValue1: {{ .Values.grafana.httpHeaderValue1 }}
+    type: prometheus
+    uid: prometheus
+    url: {{ .Values.grafana.mimirUrl }}/prometheus
+  instanceSelector:
+    matchLabels:
+      app: {{ .Values.grafana.instanceName }}
+  valuesFrom:
+  - targetPath: basicAuthUser
+    valueFrom:
+      secretKeyRef:
+        key: PROMETHEUS_USERNAME
+        name: credentials
+  - targetPath: secureJsonData.basicAuthPassword
+    valueFrom:
+      secretKeyRef:
+        key: PROMETHEUS_PASSWORD
+        name: credentials

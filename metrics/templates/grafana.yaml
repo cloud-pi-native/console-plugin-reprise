@@ -1,0 +1,53 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  labels:
+    app: {{ .Values.grafana.instanceName }}
+    app.kubernetes.io/managed-by: dso-console
+    dashboards: default
+  name: {{ .Values.grafana.instanceName }}
+  namespace: {{ .Values.grafana.namespace }}
+spec:
+  config:
+    auth:
+      oauth_allow_insecure_email_lookup: "true"
+    auth.generic_oauth:
+      api_url: {{ .Values.keycloak.baseUrl }}/realms/{{ .Values.keycloak.realm }}/protocol/openid-connect/userinfo
+      auth_url: {{ .Values.keycloak.baseUrl }}/realms/{{ .Values.keycloak.realm }}/protocol/openid-connect/auth
+      client_id:  {{ .Values.keycloak.grafanaClientId }}
+      email_attribute_path: email
+      enabled: "true"
+      groups_attribute_path: group
+      role_attribute_path:  {{ .Values.keycloak.rolePath }}
+      role_attribute_strict: "true"
+      scopes: profile, group, email, openid
+      tls_skip_verify_insecure: "true"
+      token_url: {{ .Values.keycloak.baseUrl }}/realms/{{ .Values.keycloak.realm }}/protocol/openid-connect/token
+    server:
+      root_url: https://{{ .Values.grafana.baseUrl }}/{{ .Values.grafana.instanceName }}/
+      serve_from_sub_path: "true"
+  deployment:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: grafana/grafana:9.5.5
+            name: grafana
+  route:
+    metadata: {}
+    spec:
+      host: {{ .Values.grafana.baseUrl }}
+      path: /{{ .Values.grafana.instanceName }}
+      port:
+        targetPort: 3000
+      tls:
+        termination: edge
+      to:
+        kind: Service
+        name: {{ .Values.grafana.instanceName }}-service
+        weight: 100
+      wildcardPolicy: None

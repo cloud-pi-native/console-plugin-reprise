@@ -1,0 +1,13 @@
+grafana:
+  instanceName: toto
+  namespace: infra-grafana
+  baseUrl: toto
+  httpHeaderValue1: 
+  mimirUrl: 
+
+
+keycloak:
+  baseUrl: toto
+  realm: dso
+  grafanaClientId: 
+  rolePath: 
