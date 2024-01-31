@@ -1,4 +1,7 @@
 logging: 
-  namespace: toto
+  namespace: min-zk-helmproject-dev-6293
 dso:
-  project: toto
+  project: helmproject
+kibana:
+  users:
+    - zkarahacane
