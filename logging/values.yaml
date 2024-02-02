@@ -1,7 +1,9 @@
 logging: 
-  namespace: min-zk-helmproject-dev-6293
+  namespace: dso-nexus
 dso:
-  project: helmproject
+  project: dso-console
 kibana:
   users:
-    - zkarahacane
+    - list users
+
+
