@@ -5,5 +5,7 @@ dso:
 kibana:
   users:
     - list users
+group:
+  enabled: true
 
 
